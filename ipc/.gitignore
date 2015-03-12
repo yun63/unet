@@ -1,0 +1,6 @@
+bin/*
+lib/*
+common/object.dir/*
+.swp
+.o
+
