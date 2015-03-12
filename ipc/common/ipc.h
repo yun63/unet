@@ -419,11 +419,11 @@ void	 Fattach(int, const char *);
 int		 Poll(struct pollfd *, unsigned long, int);
 #endif
 
-void	 err_dump(const char *, ...);
-void	 err_msg(const char *, ...);
-void	 err_quit(const char *, ...);
-void	 err_ret(const char *, ...);
-void	 err_sys(const char *, ...);
+void	 error_dump(const char *, ...);
+void	 error_message(const char *, ...);
+void	 error_quit(const char *, ...);
+void	 error_return(const char *, ...);
+void	 error_terminate(const char *, ...);
 
 			/* prototypes for our pthread wrapper functions */
 void	 Pthread_attr_init(pthread_attr_t *);

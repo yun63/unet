@@ -7,13 +7,16 @@
 #############################################################################
 
 ## 头文件搜索路径 
-INCPATH = -I. -I$(GTEST_DIR)/include  -I./protobuf/include -I./common
+INCPATH = -I. -I$(GTEST_DIR)/include  -I./protobuf/include
 
 ## 源代码目录
-SRCDIRS = src/pipe 
+SRCDIRS = .
 
 ## 生成目标目录
 OBJ_DIR = object.dir
+
+## 库文件目录
+LIB_DIR = ../lib
 
 ## 可执行程序目录
 BIN = bin
@@ -27,7 +30,7 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 export LD_LIBRARY_PATH+=:./protobuf/lib/
 
 ## 可执行文件名称
-TARGETS = $(BIN)/pipe
+TARGETS = $(LIB_DIR)/libcommon.a $(LIB_DIR)/libcommon.so
 
 ## 源文件类型
 SRCEXTS = .c .cc .cpp .c++ .cxx 
@@ -67,8 +70,7 @@ LIBS = -lpthread -lz -lm
 ## 第三方库文件
 MYLIBS = -L/usr/lib -lpthread \
 		 -L/usr/lib -lm \
-		 -L/lib -L/usr/local/lib \
-		 -L./lib -lcommon
+		 -L/lib -L/usr/local/lib 
 
 COMPILE_C := $(CC) $(CFLAGS) $(MYCFLAGS) $(INCPATH) -c
 COMPILE_CXX := $(CXX) $(CXXFLAGS) $(MYCFLAGS) $(INCPATH) -c
@@ -155,11 +157,12 @@ gtest_main.o : $(GTEST_SRCS_)
 #-------------------------------------
 pb : $(PROTO_CXX)
 
+$(LIB_DIR)/libcommon.a : $(OBJECTS)
+	@$(AR) $(ARFLAGS) $@ $^ 
 
-$(BIN)/pipe : $(PROTO_OBJS) $(OBJECTS)
-	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
-	@echo "\033[1;35mLINKING $@ \033[0m"
-
+$(LIB_DIR)/libcommon.so : $(OBJECTS)
+	@$(LINK) -shared -fPIC -o $@ $^ $(MYLIBS) $(LIBS)
+	
 
 install:
 	mv -f $(TARGETS) $(BIN)
