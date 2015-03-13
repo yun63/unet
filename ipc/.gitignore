@@ -1,5 +1,6 @@
 bin/*
 common/object.dir/*
+src/*.o
 .swp
 .o
 /object.dir
