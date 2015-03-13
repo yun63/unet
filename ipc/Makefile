@@ -27,7 +27,7 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 export LD_LIBRARY_PATH+=:./protobuf/lib/
 
 ## 可执行文件名称
-TARGETS = $(BIN)/pipe
+TARGETS = $(BIN)/pipe $(BIN)/fduplex
 
 ## 源文件类型
 SRCEXTS = .c .cc .cpp .c++ .cxx 
@@ -156,7 +156,11 @@ gtest_main.o : $(GTEST_SRCS_)
 pb : $(PROTO_CXX)
 
 
-$(BIN)/pipe : $(PROTO_OBJS) $(OBJECTS)
+$(BIN)/pipe : src/mainpipe.o $(PROTO_OBJS) $(OBJECTS)
+	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
+	@echo "\033[1;35mLINKING $@ \033[0m"
+
+$(BIN)/fduplex : src/fduplex.o $(OBJECTS)
 	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
 	@echo "\033[1;35mLINKING $@ \033[0m"
 

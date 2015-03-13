@@ -16,32 +16,29 @@
 
 int main(int argc, char **argv)
 {
-    struct stat st;
-    if (argc != 2)
+    int pipe[2];
+    int n;
+    char c;
+    pid_t child_pid;
+
+    Pipe(pipe);
+
+    if ((child_pid = Fork()) == 0)
     {
-        printf("usage: ftok <pathname>");
-        exit(-1);
+        sleep(3);
+
+        if ((n = Read(pipe[0], &c, 1)) != 1)
+            error_terminate("child: read retruned %d", n);
+        printf("child read %c\n", c);
+        Write(pipe[0], "c", 1);
+        exit(0);
     }
 
-    if (stat(argv[1], &st) == -1)
-    {
-        printf("stat error\n");
-        exit(-1);
-    }
+    Write(pipe[1], "p", 1);
 
-    printf("%d\n", 	HAVE_SYS_MSG_H);
-
-    printf("st_dev: %lx, st_ino: %lx, key: %x\n", 
-            (u_long)st.st_dev, (u_long)st.st_ino, ftok(argv[1], 0x57));
-
-    int i, msgid;
-
-    for (i = 0; i < 10; i++)
-    {
-        msgid = msgget(IPC_PRIVATE, SVMSG_MODE | IPC_CREAT);
-        printf("msgid = %d\n", msgid);
-        msgctl(msgid, IPC_RMID, NULL);
-    }
+    if ((n = Read(pipe[1], &c, 1)) != 1)
+        error_terminate("parent: read returned %d", n);
+    printf("parent read %c\n", c);
 
     return 0;
 }
