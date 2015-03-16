@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 {
     int pipe[2];
     int n;
-    char c;
+    char buffer[MAXLINE + 1];
     pid_t child_pid;
 
     Pipe(pipe);
@@ -27,18 +27,20 @@ int main(int argc, char **argv)
     {
         sleep(3);
 
-        if ((n = Read(pipe[0], &c, 1)) != 1)
+        if ((n = Read(pipe[0], buffer, MAXLINE)) <= 0)
             error_terminate("child: read retruned %d", n);
-        printf("child read %c\n", c);
-        Write(pipe[0], "c", 1);
+        printf("child read %s\n", buffer);
+        Write(pipe[0], buffer, strlen(buffer));
         exit(0);
     }
 
-    Write(pipe[1], "p", 1);
+    Fgets(buffer, MAXLINE, stdin);
 
-    if ((n = Read(pipe[1], &c, 1)) != 1)
+    Write(pipe[1], buffer, strlen(buffer));
+
+    if ((n = Read(pipe[1], buffer, MAXLINE)) <= 0)
         error_terminate("parent: read returned %d", n);
-    printf("parent read %c\n", c);
+    printf("parent read %s\n", buffer);
 
     return 0;
 }

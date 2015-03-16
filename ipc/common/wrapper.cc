@@ -35,6 +35,32 @@ void *Calloc(size_t n, size_t size)
     return ptr;
 }
 
+int Open(const char *pathname, int oflag, ...)
+{
+    int fd;
+    va_list ap;
+    mode_t  mode;
+
+    if (oflag & O_CREAT)
+    {
+        va_start(ap, oflag);
+        va_arg(ap, va_mode_t);
+        if ((fd = open(pathname, oflag, mode)) == -1)
+        {
+            error_terminate("open error");
+        }
+    }
+    else
+    {
+        if ((fd = open(pathname, oflag)) == -1)
+        {
+            error_terminate("open error");
+        }
+    }
+
+    return fd;
+}
+
 void Close(int fd)
 {
     if (close(fd) == -1) 
@@ -120,9 +146,24 @@ FILE *Popen(const char *command, const char *mode)
     return fp;
 }
 
+int Pclose(FILE *fp)
+{
+    int status;
+    if ((status = pclose(fp)) == -1)
+        error_terminate("pclose error");
+
+    return status;
+}
+
 void Fclose(FILE *fp)
 {
     if (fclose(fp) != 0)
         error_terminate("fclose error");
+}
+
+void Unlink(const char *pathname)
+{
+    if (unlink(pathname) == -1)
+        error_terminate("unlink error %s", pathname);
 }
 
