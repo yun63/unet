@@ -28,6 +28,8 @@ void client(int readfd, int writefd)
     if (buff[len - 1] == '\n')
         len--;
 
+    printf("read file description: %d\n write file description: %d\n", readfd, writefd);
+
     /* 向IPC管道写数据 */
     Write(writefd, buff, len);
 
