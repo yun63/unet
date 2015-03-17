@@ -28,7 +28,8 @@ export LD_LIBRARY_PATH+=:./protobuf/lib/
 
 ## 可执行文件名称
 TARGETS = $(BIN)/pipe $(BIN)/fduplex $(BIN)/mainpopen \
-		  $(BIN)/mainfifo $(BIN)/server_main $(BIN)/client_main
+		  $(BIN)/mainfifo $(BIN)/server_main $(BIN)/client_main \
+		  $(BIN)/fifo_server $(BIN)/fifo_client
 
 ## 源文件类型
 SRCEXTS = .c .cc .cpp .c++ .cxx 
@@ -179,6 +180,14 @@ $(BIN)/server_main : src/server_main.o $(OBJECTS)
 
 
 $(BIN)/client_main : src/client_main.o $(OBJECTS)
+	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
+	@echo "\033[1;35mLINKING $@ \033[0m"
+
+$(BIN)/fifo_server : src/fifo_server.o $(OBJECTS)
+	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
+	@echo "\033[1;35mLINKING $@ \033[0m"
+
+$(BIN)/fifo_client : src/fifo_client.o $(OBJECTS)
 	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
 	@echo "\033[1;35mLINKING $@ \033[0m"
 

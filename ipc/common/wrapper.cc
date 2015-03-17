@@ -164,6 +164,54 @@ void Fclose(FILE *fp)
 void Unlink(const char *pathname)
 {
     if (unlink(pathname) == -1)
+    {
         error_terminate("unlink error %s", pathname);
+    }
+}
+
+ssize_t readline(int fd, void *vptr, size_t maxlen)
+{
+    int c, i, readtypes;
+    char *ptr = (char *)vptr;
+
+    for (int i = 0; i < maxlen - 1; ++i)
+    {
+        if ((readtypes = read(fd, &c, 1)) == 1)
+        {
+            *ptr++ = c;
+            if (c == '\n') break;
+        }
+        else if (readtypes == 0)
+        {
+            if (i == 0) 
+            {
+                return 0;
+            }
+            else 
+            {
+                break;
+            }
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    *ptr = 0;   /* null terminate like fgets() */
+
+    return i;
+}
+
+ssize_t Readline(int fd, void *ptr, size_t maxlen)
+{
+    ssize_t n = 0;
+
+    if ((n = readline(fd, ptr, maxlen)) < 0)
+    {
+        error_terminate("readline error");
+    }
+
+    return n;
 }
 
