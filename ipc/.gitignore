@@ -3,5 +3,7 @@ common/object.dir/*
 src/*.o
 .swp
 .o
+lib/*.a
+lib/*.so
 /object.dir
-
+test
