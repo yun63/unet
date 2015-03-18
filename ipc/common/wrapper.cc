@@ -171,17 +171,18 @@ void Unlink(const char *pathname)
 
 ssize_t readline(int fd, void *vptr, size_t maxlen)
 {
-    int c, i, readtypes;
+    int i, readbypes;
+    char c;
     char *ptr = (char *)vptr;
 
     for (int i = 0; i < maxlen - 1; ++i)
     {
-        if ((readtypes = read(fd, &c, 1)) == 1)
+        if ((readbypes = read(fd, &c, 1)) == 1)
         {
             *ptr++ = c;
             if (c == '\n') break;
         }
-        else if (readtypes == 0)
+        else if (readbypes == 0)
         {
             if (i == 0) 
             {
