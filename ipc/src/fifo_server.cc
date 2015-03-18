@@ -22,7 +22,7 @@ void server(int, int);
 int main(int argc, char **argv)
 {
     int readfifo, writefifo, dummyfd, fd;
-    char *ptr, buff[MAXLINE + 1], fifoname[MAXLINE + 1];
+    char *ptr, buff[MAXLINE], fifoname[MAXLINE];
     pid_t   pid;
     ssize_t n;
 
@@ -38,9 +38,9 @@ int main(int argc, char **argv)
 
     while ((n = Readline(readfifo, buff, MAXLINE)) > 0)
     {
-        if (buff[n - 1] == '\n')
+        if (buff[n-1] == '\n')
             n--;                                /* 删除换行符 */
-        buff[n - 1] = '\0';                     /* null terminate */
+        buff[n-1] = '\0';                       /* null terminate */
 
         if ((ptr = strchr(buff, ' ')) == NULL)
         {
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
             continue;
         }
 
-        if ((fd = open(ptr, O_RDONLY | O_NONBLOCK)) < 0)
+        if ((fd = open(ptr, O_RDONLY)) < 0)
         {
             /* 打开文件失败，必须通知客户端 */
             snprintf(buff + n, sizeof(buff) - n, "can't open, %s\n", strerror(errno));
