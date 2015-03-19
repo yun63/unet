@@ -40,8 +40,8 @@ HDREXTS = .h .hh .hpp .h++ .hxx
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 ## C/C++编译器编译选项
-CFLAGS   += -g #-Wall -Wextra
-CXXFLAGS += -g #-Wall -Wextra
+CFLAGS   += -g -fPIC #-Wall -Wextra
+CXXFLAGS += -g -fPIC #-Wall -Wextra
 
 ## 自定义编译选项
 MYCFLAGS = #-DENCODING_UTF8 -DCHARSET_SHOW_GBK 
@@ -161,7 +161,7 @@ $(LIB_DIR)/libcommon.a : $(OBJECTS)
 	@$(AR) $(ARFLAGS) $@ $^ 
 
 $(LIB_DIR)/libcommon.so : $(OBJECTS)
-	@$(LINK) -shared -fPIC -o $@ $^ $(MYLIBS) $(LIBS)
+	@$(LINK) -shared -o $@ $^ $(MYLIBS) $(LIBS)
 	
 
 install:

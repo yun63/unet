@@ -17,7 +17,7 @@
 #include "src/pipe/fifo.h"
 #include "ipc.h"
 
-void client(int, int);
+void msg_client(int, int);
 
 int main(int argc, char **argv)
 {
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     writefd = Open(FIFO_1, O_WRONLY, 0);
     readfd = Open(FIFO_2, O_RDONLY, 0);
 
-    client(readfd, writefd);
+    msg_client(readfd, writefd);
 
     Close(readfd);
     Close(writefd);
