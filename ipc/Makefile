@@ -192,7 +192,7 @@ $(BIN)/fifo_client : src/fifo_client.o $(OBJECTS)
 	@echo "\033[1;35mLINKING $@ \033[0m"
 
 test : src/test.o $(OBJECTS)
-	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS)
+	@$(LINK) -o $@ $^ $(MYLIBS) $(LIBS) -lrt
 	@echo "\033[1;35mLINKING $@ \033[0m"
 
 

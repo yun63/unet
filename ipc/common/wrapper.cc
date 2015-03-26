@@ -15,7 +15,6 @@
 // =====================================================================================
 
 #include <stdarg.h>
-
 #include "ipc.h"
 
 void *Malloc(size_t size)
@@ -214,5 +213,61 @@ ssize_t Readline(int fd, void *ptr, size_t maxlen)
     }
 
     return n;
+}
+
+mqd_t Mq_open(const char *pathname, int oflag, ...)
+{
+    mqd_t mqd;
+    va_list ap;
+    mode_t mode;
+    struct mq_attr *attr;
+
+    if (oflag & O_CREAT)
+    {
+        va_start(ap, oflag);
+        mode = va_arg(ap, va_mode_t);
+        attr = va_arg(ap, struct mq_attr *);
+        if ((mqd = mq_open(pathname, oflag, mode, attr)) == (mqd_t)-1)
+        {
+            error_terminate("mq_open error: %s", pathname);
+            va_end(ap);
+        }
+        else
+        {
+            if ((mqd = mq_open(pathname, oflag)) == (mqd_t)-1)
+            {
+                error_terminate("mq_open: %s", pathname);
+            }
+        }
+    }
+
+    return mqd;
+}
+
+void Mq_close(mqd_t mqd)
+{
+    if (mq_close(mqd) == -1)
+    {
+        error_terminate("mq_close error");
+    }
+}
+
+void Mq_unlink(const char *pathname)
+{
+    if (mq_unlink(pathname) == -1)
+    {
+        error_terminate("mq_unlink error");
+    }
+}
+
+int Getopt(int argc, char * const *argv, const char *str)
+{
+    int opt;
+    if ((opt = getopt(argc, argv, str)) == '?')
+    {
+        exit(1);
+    }
+
+    return opt;
 }
 

@@ -65,7 +65,7 @@ PROTO_OBJS := $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(PROTO_CXX)))
 
 
 ## 库文件
-LIBS = -lpthread -lz -lm -lrt
+LIBS = -L/usr/lib -lpthread -L/usr/lib -lz -L/usr/lib -lm -lrt
 
 COMPILE_C := $(CC) $(CFLAGS) $(MYCFLAGS) $(INCPATH)
 COMPILE_CXX := $(CXX) $(CXXFLAGS) $(MYCFLAGS) $(INCPATH)
